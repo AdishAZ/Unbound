@@ -1,0 +1,16 @@
+D:\Unbound\pokemon\cpp\src\render\aspect_ratio.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\aspect_ratio.obj
+D:\Unbound\pokemon\cpp\src\render\resolution_scaling.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\resolution_scaling.obj
+D:\Unbound\pokemon\cpp\src\render\viewport.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\viewport.obj
+D:\Unbound\pokemon\cpp\src\render\camera.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\camera.obj
+D:\Unbound\pokemon\cpp\src\render\overlay_layout.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\overlay_layout.obj
+D:\Unbound\pokemon\cpp\src\render\render_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\render_manager.obj
+D:\Unbound\pokemon\cpp\src\render\world_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\world_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\map_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\map_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\entity_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\entity_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\sdl_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\sdl_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\render_queue.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\render_queue.obj
+D:\Unbound\pokemon\cpp\src\render\render_layer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\render_layer.obj
+D:\Unbound\pokemon\cpp\src\render\particle_system.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\particle_system.obj
+D:\Unbound\pokemon\cpp\src\render\weather_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\weather_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\lighting_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\lighting_manager.obj
+D:\Unbound\pokemon\cpp\src\render\animation_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\Debug\animation_manager.obj

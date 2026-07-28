@@ -1,0 +1,6 @@
+D:\Unbound\pokemon\cpp\build\Debug\pqxx.dll
+D:\Unbound\pokemon\cpp\build\Debug\libpq.dll
+D:\Unbound\pokemon\cpp\build\Debug\libssl-3-x64.dll
+D:\Unbound\pokemon\cpp\build\Debug\libcrypto-3-x64.dll
+D:\Unbound\pokemon\cpp\build\Debug\argon2.dll
+D:\Unbound\pokemon\cpp\build\unboundmp_server.dir\Debug\unboundm.60B364C1.Up2Date

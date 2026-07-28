@@ -1,0 +1,4 @@
+Title: POKEMON FIRE
+Code: AGB-BPRE
+Framebuffer: 0000027717AF8900
+Pitch: 960

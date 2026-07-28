@@ -1,0 +1,30 @@
+=== EVENT OBJECTS at 0x02036E38 ===
+ObjEvent[0] flags0=0xc1 flags1=0x80 spriteId=0 gfxId=0 curX=30 curY=26 raw=[c1 80 01 00 00 00 0b 00 ff 42 03 33 20 00 19 00 1e 00 1a 00 1e 00 1a 00 44 00 00 3d 03 00 00 00 04 00 01 00]
+ObjEvent[1] flags0=0x3 flags1=0x0 spriteId=1 gfxId=19 curX=36 curY=23 raw=[03 00 00 00 01 13 02 00 01 42 03 33 24 00 16 00 24 00 17 00 25 00 17 00 33 11 00 00 12 00 00 00 03 00 00 00]
+ObjEvent[2] flags0=0x1 flags1=0x0 spriteId=2 gfxId=51 curX=35 curY=26 raw=[01 00 00 00 02 33 02 00 06 42 03 33 23 00 1b 00 23 00 1a 00 23 00 1a 00 22 11 00 00 ff 00 00 00 02 00 00 00]
+ObjEvent[3] flags0=0x1 flags1=0x40 spriteId=3 gfxId=171 curX=24 curY=35 raw=[01 40 00 00 03 ab 02 00 02 42 03 33 17 00 23 00 18 00 23 00 18 00 23 00 44 11 00 00 ff 00 21 21 04 00 00 00]
+ObjEvent[4] flags0=0x1 flags1=0x10 spriteId=5 gfxId=122 curX=39 curY=28 raw=[01 10 00 00 05 7a 00 00 07 42 03 30 27 00 1c 00 27 00 1c 00 27 00 1c 00 11 00 00 00 ff 00 84 84 00 00 00 02]
+ObjEvent[5] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[6] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[7] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[8] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[9] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[a] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[b] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[c] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[d] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[e] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+ObjEvent[f] flags0=0x0 flags1=0x0 spriteId=0 gfxId=0 curX=0 curY=0 raw=[00 00 00 00 00 00 00 00 ff ff ff 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 00]
+
+=== gSprites OAM for active event objects ===
+Sprite[0] attr0=0x0 attr1=0x0 attr2=0x0 shape=0 sz=0 tile=0 pal=0
+Sprite[1] attr0=0x8 attr1=0x0 attr2=0x0 shape=0 sz=0 tile=0 pal=0
+Sprite[2] attr0=0x2 attr1=0x0 attr2=0x0 shape=0 sz=0 tile=0 pal=0
+Sprite[3] attr0=0x10 attr1=0x0 attr2=0x0 shape=0 sz=0 tile=0 pal=0
+Sprite[5] attr0=0x0 attr1=0x0 attr2=0x0 shape=0 sz=0 tile=0 pal=0
+
+=== PLAYER POS from pos_reader ===
+player_x=30 player_y=26
+
+=== CAMERA ===
+cam_x=0 cam_y=0 zoom=1

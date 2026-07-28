@@ -1,0 +1,9 @@
+D:\Unbound\pokemon\cpp\build\Release\SDL2_ttf.dll
+D:\Unbound\pokemon\cpp\build\Release\SDL2.dll
+D:\Unbound\pokemon\cpp\build\Release\freetype.dll
+D:\Unbound\pokemon\cpp\build\Release\z.dll
+D:\Unbound\pokemon\cpp\build\Release\bz2.dll
+D:\Unbound\pokemon\cpp\build\Release\libpng16.dll
+D:\Unbound\pokemon\cpp\build\Release\brotlidec.dll
+D:\Unbound\pokemon\cpp\build\Release\brotlicommon.dll
+D:\Unbound\pokemon\cpp\build\unboundmp_client.dir\Release\unboundm.4A05039A.Up2Date

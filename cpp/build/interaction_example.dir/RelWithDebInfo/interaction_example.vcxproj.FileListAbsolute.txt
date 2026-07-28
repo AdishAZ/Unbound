@@ -1,0 +1,2 @@
+D:\Unbound\pokemon\cpp\build\RelWithDebInfo\libprotobuf.dll
+D:\Unbound\pokemon\cpp\build\RelWithDebInfo\abseil_dll.dll

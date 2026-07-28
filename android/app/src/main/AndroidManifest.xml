@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Network layer deliverable: the client's TcpSocket
+         (cpp/src/network/tcp_socket.cpp) is plain POSIX BSD sockets,
+         already portable to the NDK unchanged - the only Android-side
+         requirement is declaring this permission. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- The player picks their own legally-owned ROM file via the system
+         file picker (Storage Access Framework) at runtime - this app never
+         ships, downloads, or bundles ROM data, and never requests broad
+         storage permissions to go looking for one. -->
+
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.UnboundMP"
+        android:supportsRtl="true">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

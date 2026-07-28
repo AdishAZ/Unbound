@@ -1,0 +1,6 @@
+[2026-07-28 19:13:07.952] [UI] [INFO] [UI] SDL_ttf initialized
+[Client] Using fallback address table configuration.
+[2026-07-28 19:13:07.961] [Client] [INFO] ClientSaveManager initialized.
+[2026-07-28 19:13:07.964] [UI] [INFO] [UI] Loaded font: assets/fonts/default.ttf
+[2026-07-28 19:13:07.965] [UI] [INFO] [UI] Cached font: 16 px
+[2026-07-28 19:13:07.967] [UI] [INFO] [UI] Loaded glyph count: 1

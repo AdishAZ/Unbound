@@ -1,0 +1,4 @@
+D:\Unbound\pokemon\cpp\build\Debug\libpq.dll
+D:\Unbound\pokemon\cpp\build\Debug\libssl-3-x64.dll
+D:\Unbound\pokemon\cpp\build\Debug\libcrypto-3-x64.dll
+D:\Unbound\pokemon\cpp\build\libpq_test.dir\Debug\libpq_te.7F7C04AC.Up2Date

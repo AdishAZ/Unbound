@@ -1,0 +1,11 @@
+D:\Unbound\pokemon\cpp\src\gameplay\direction.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\direction.obj
+D:\Unbound\pokemon\cpp\src\gameplay\follower_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\follower_manager.obj
+D:\Unbound\pokemon\cpp\src\gameplay\visibility_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\visibility_manager.obj
+D:\Unbound\pokemon\cpp\src\gameplay\world_sync.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\world_sync.obj
+D:\Unbound\pokemon\cpp\src\gameplay\movement_sync.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\movement_sync.obj
+D:\Unbound\pokemon\cpp\src\gameplay\position_interpolator.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\position_interpolator.obj
+D:\Unbound\pokemon\cpp\src\gameplay\remote_player_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\remote_player_manager.obj
+D:\Unbound\pokemon\cpp\src\gameplay\sync_scheduler.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\sync_scheduler.obj
+D:\Unbound\pokemon\cpp\src\gameplay\gameplay_sync_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\gameplay_sync_manager.obj
+D:\Unbound\pokemon\cpp\src\gameplay\world_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\world_manager.obj
+D:\Unbound\pokemon\cpp\src\gameplay\inventory_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\inventory_manager.obj

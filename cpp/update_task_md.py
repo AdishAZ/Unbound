@@ -1,0 +1,40 @@
+def update_task_md():
+    path = 'C:/Users/sj782/.gemini/antigravity/brain/782fb3d7-5baa-4e79-a9ac-6c25f35d23d3/task.md'
+    with open(path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    content = content.replace('- [ ] 1.', '- [x] 1.')
+    content = content.replace('- [ ] 2.', '- [x] 2.')
+    content = content.replace('- [ ] 3.', '- [x] 3.')
+    content = content.replace('- [ ] 4.', '- [x] 4.')
+    content = content.replace('- [ ] 5.', '- [x] 5.')
+    content = content.replace('- [ ] 6.', '- [x] 6.')
+    content = content.replace('- [ ] 7.', '- [x] 7.')
+    content = content.replace('- [ ] Add Padding, Margin', '- [x] Add Padding, Margin')
+    content = content.replace('- [ ] Implement Layout base', '- [x] Implement Layout base')
+    content = content.replace('- [ ] Implement VerticalLayout', '- [x] Implement VerticalLayout')
+    content = content.replace('- [ ] Add automatic sizing', '- [x] Add automatic sizing')
+    content = content.replace('- [ ] Complete ThemeManager', '- [x] Complete ThemeManager')
+    content = content.replace('- [ ] Update Widget base styling', '- [x] Update Widget base styling')
+    content = content.replace('- [ ] Expand RenderContext', '- [x] Expand RenderContext')
+    content = content.replace('- [ ] Build AnimationManager', '- [x] Build AnimationManager')
+    content = content.replace('- [ ] Add micro-animations', '- [x] Add micro-animations')
+    content = content.replace('- [ ] Implement tab-based focus', '- [x] Implement tab-based focus')
+    content = content.replace('- [ ] Ensure visible focus outlines', '- [x] Ensure visible focus outlines')
+    content = content.replace('- [ ] Manage cursor', '- [x] Manage cursor')
+    content = content.replace('- [ ] Enhance Panel, Window', '- [x] Enhance Panel, Window')
+    content = content.replace('- [ ] Enhance ScrollView', '- [x] Enhance ScrollView')
+    content = content.replace('- [ ] Implement Modal dialog', '- [x] Implement Modal dialog')
+    content = content.replace('- [ ] Flesh out NotificationCenter', '- [x] Flesh out NotificationCenter')
+    content = content.replace('- [ ] Create DevOverlay', '- [x] Create DevOverlay')
+    content = content.replace('- [ ] Centralize texture', '- [x] Centralize texture')
+    content = content.replace('- [ ] Rewrite LoginScreen', '- [x] Rewrite LoginScreen')
+    content = content.replace('- [ ] Add Welcome Back', '- [x] Add Welcome Back')
+    content = content.replace('- [ ] Ensure proper centering', '- [x] Ensure proper centering')
+    content = content.replace('- [ ] Update CMakeLists.txt', '- [x] Update CMakeLists.txt')
+
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+update_task_md()
+print("task.md updated")

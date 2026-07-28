@@ -1,0 +1,292 @@
+syntax = "proto3";
+
+// Wire protocol for the Pokemon Unbound multiplayer wrapper.
+//
+// Design notes:
+//  - The ROM is never read as "game logic" by the server. The server is a
+//    dumb relay + session/auth/position authority. It never parses Pokemon
+//    data, move data, or map data.
+//  - Trades and battles are modeled as a generic "link session" byte relay.
+//    Real GBA trades/battles run over the link cable serial protocol, which
+//    mGBA already emulates faithfully. Two clients open a link session
+//    through the server, and the server forwards opaque bytes between them
+//    exactly as a physical link cable would. Neither the server nor this
+//    schema needs to understand Unbound's internal Pokemon/move structures.
+//    This also means the protocol does not need to change if Unbound is
+//    patched to a new version, since we never touch its memory layout here.
+//
+// Package/version note: this file is the source of truth. Generated code
+// (protoc-gen-cpp / protoc-gen-go) is produced at build time, not committed.
+// See /proto/README.md and the top-level Makefile.
+
+// Note: the package is "unboundmp.protocol" (not e.g. "unboundmp.v1") so
+// that generated C++ code lands in namespace unboundmp::protocol, matching
+// the hand-written serialization.h / packet_dispatcher.h in
+// cpp/include/protocol/ without qualification games. Protocol *wire*
+// versioning is tracked by Envelope.protocol_version, not by this package
+// name — see the Versioning section in proto/README.md.
+package unboundmp.protocol;
+
+option go_package = "unbound-mp/server/internal/protocol/pb;pb";
+
+// ---------------------------------------------------------------------------
+// Envelope
+// ---------------------------------------------------------------------------
+
+// Every message on the wire is an Envelope. This gives every packet a
+// protocol version, a monotonic sequence number (per-connection), and a
+// send timestamp, independent of payload type. See constants.proto-equivalent
+// values in constants.h / config/constants.go for PROTOCOL_VERSION.
+message Envelope {
+  uint32 protocol_version = 1;
+  uint64 sequence         = 2;
+  int64 timestamp_ms      = 3;
+
+  oneof payload {
+    // Handshake
+    ClientHello client_hello   = 10;
+    ServerHello server_hello   = 11;
+
+    // Auth
+    AuthRequest auth_request   = 12;
+    AuthResponse auth_response = 13;
+
+    // Liveness
+    Ping ping = 14;
+    Pong pong = 15;
+
+    // Session lifecycle
+    Disconnect disconnect = 16;
+
+    // World / presence
+    PlayerJoined player_joined             = 20;
+    PlayerLeft player_left                 = 21;
+    WorldSnapshot world_snapshot           = 22;
+    PlayerStateUpdate player_state_update  = 23;
+
+    // Follower Pokemon (first party slot)
+    FollowerUpdate follower_update = 30;
+
+    // Link session (covers both trade and battle - see notes above)
+    LinkSessionRequest  link_session_request  = 40;
+    LinkSessionResponse link_session_response = 41;
+    LinkSessionData     link_session_data     = 42;
+    LinkSessionEnd       link_session_end     = 43;
+
+    // Errors
+    ErrorMessage error = 99;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Handshake
+// ---------------------------------------------------------------------------
+
+// First message sent by the client immediately after connecting, before
+// authentication. Lets the server reject incompatible clients cleanly.
+message ClientHello {
+  uint32 client_protocol_version = 1;
+  string client_version_string   = 2; // human-readable, e.g. "0.1.0"
+}
+
+// Server's reply to ClientHello. `accepted = false` means the server will
+// close the connection after sending this (e.g. version mismatch).
+message ServerHello {
+  bool accepted                  = 1;
+  uint32 server_protocol_version = 2;
+  string server_version_string   = 3;
+  string reject_reason           = 4; // set only when accepted = false
+}
+
+// ---------------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------------
+
+// Simple username-based auth. No password/token in this milestone.
+message AuthRequest {
+  string username = 1;
+}
+
+enum AuthResult {
+  AUTH_RESULT_UNSPECIFIED     = 0;
+  AUTH_RESULT_OK              = 1;
+  AUTH_RESULT_USERNAME_TAKEN  = 2;
+  AUTH_RESULT_INVALID_NAME    = 3;
+  AUTH_RESULT_SERVER_FULL     = 4;
+}
+
+message AuthResponse {
+  AuthResult result   = 1;
+  uint32 player_id    = 2; // valid only when result == AUTH_RESULT_OK
+  string message      = 3; // optional human-readable detail
+}
+
+// ---------------------------------------------------------------------------
+// Liveness
+// ---------------------------------------------------------------------------
+
+message Ping {
+  uint64 nonce = 1;
+}
+
+message Pong {
+  uint64 nonce = 1;
+}
+
+// ---------------------------------------------------------------------------
+// Session lifecycle
+// ---------------------------------------------------------------------------
+
+enum DisconnectReason {
+  DISCONNECT_REASON_UNSPECIFIED   = 0;
+  DISCONNECT_REASON_CLIENT_QUIT   = 1;
+  DISCONNECT_REASON_TIMEOUT       = 2;
+  DISCONNECT_REASON_KICKED        = 3;
+  DISCONNECT_REASON_SERVER_SHUTDOWN = 4;
+  DISCONNECT_REASON_PROTOCOL_ERROR = 5;
+}
+
+message Disconnect {
+  DisconnectReason reason = 1;
+  string detail           = 2;
+}
+
+// ---------------------------------------------------------------------------
+// World / presence
+// ---------------------------------------------------------------------------
+
+enum Direction {
+  DIRECTION_UNSPECIFIED = 0;
+  DIRECTION_DOWN        = 1;
+  DIRECTION_UP          = 2;
+  DIRECTION_LEFT        = 3;
+  DIRECTION_RIGHT       = 4;
+}
+
+enum MovementMode {
+  MOVEMENT_MODE_UNSPECIFIED = 0;
+  MOVEMENT_MODE_WALK        = 1;
+  MOVEMENT_MODE_RUN         = 2;
+  MOVEMENT_MODE_BIKE        = 3;
+  MOVEMENT_MODE_SURF        = 4;
+}
+
+// map_bank/map_number mirror the Pokemon-engine convention of identifying
+// a map by (bank, number) rather than a single global id, since that's how
+// Unbound (and vanilla FireRed/Emerald-derived engines) address maps.
+message PlayerStateUpdate {
+  uint32 player_id        = 1;
+  uint32 map_bank         = 2;
+  uint32 map_number       = 3;
+  int32 x                 = 4;
+  int32 y                 = 5;
+  Direction facing        = 6;
+  MovementMode movement   = 7;
+  bool is_moving          = 8;
+}
+
+message PlayerInfo {
+  uint32 player_id           = 1;
+  string username            = 2;
+  PlayerStateUpdate state    = 3;
+  FollowerUpdate follower    = 4;
+}
+
+// Sent once, right after a player finishes joining, to every other player
+// already on the same map/session.
+message PlayerJoined {
+  PlayerInfo player = 1;
+}
+
+message PlayerLeft {
+  uint32 player_id            = 1;
+  DisconnectReason reason     = 2;
+}
+
+// Full state resync, sent on join and periodically as a keyframe so
+// clients can recover from any dropped delta updates.
+message WorldSnapshot {
+  repeated PlayerInfo players = 1;
+}
+
+// ---------------------------------------------------------------------------
+// Follower Pokemon
+// ---------------------------------------------------------------------------
+
+message FollowerUpdate {
+  uint32 player_id  = 1;
+  uint32 species_id = 2; // 0 = no follower / follower hidden
+  bool visible      = 3;
+  bool shiny        = 4;
+}
+
+// ---------------------------------------------------------------------------
+// Link session (trade + battle byte relay)
+// ---------------------------------------------------------------------------
+
+enum LinkMode {
+  LINK_MODE_UNSPECIFIED = 0;
+  LINK_MODE_TRADE       = 1;
+  LINK_MODE_BATTLE      = 2;
+}
+
+// Player A asks the server to open a link session with player B. The server
+// only validates that both players exist, are idle, and are on adjacent/
+// valid tiles per game rules enforced client-side; it does not validate
+// game state.
+message LinkSessionRequest {
+  uint32 target_player_id = 1;
+  LinkMode mode            = 2;
+}
+
+message LinkSessionResponse {
+  uint32 session_id        = 1; // 0 if rejected
+  uint32 initiator_player_id = 2;
+  uint32 target_player_id   = 3;
+  LinkMode mode             = 4;
+  bool accepted             = 5;
+  string reject_reason      = 6;
+}
+
+// Opaque relay of link-cable-equivalent bytes between the two participants
+// of a session. The server forwards this payload verbatim to the other
+// session participant and never inspects its contents.
+message LinkSessionData {
+  uint32 session_id = 1;
+  uint32 from_player_id = 2;
+  bytes payload = 3;
+  uint64 stream_seq = 4; // per-session monotonic counter, for gap detection
+}
+
+enum LinkSessionEndReason {
+  LINK_SESSION_END_REASON_UNSPECIFIED = 0;
+  LINK_SESSION_END_REASON_COMPLETED   = 1;
+  LINK_SESSION_END_REASON_CANCELLED   = 2;
+  LINK_SESSION_END_REASON_PEER_LEFT   = 3;
+  LINK_SESSION_END_REASON_TIMEOUT     = 4;
+}
+
+message LinkSessionEnd {
+  uint32 session_id = 1;
+  LinkSessionEndReason reason = 2;
+}
+
+// ---------------------------------------------------------------------------
+// Errors
+// ---------------------------------------------------------------------------
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED       = 0;
+  ERROR_CODE_MALFORMED_PACKET  = 1;
+  ERROR_CODE_UNAUTHENTICATED   = 2;
+  ERROR_CODE_UNKNOWN_PLAYER    = 3;
+  ERROR_CODE_UNKNOWN_SESSION   = 4;
+  ERROR_CODE_VERSION_MISMATCH  = 5;
+  ERROR_CODE_RATE_LIMITED      = 6;
+  ERROR_CODE_INTERNAL          = 7;
+}
+
+message ErrorMessage {
+  ErrorCode code   = 1;
+  string message   = 2;
+}
