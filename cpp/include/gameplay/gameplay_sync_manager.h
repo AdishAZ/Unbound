@@ -16,8 +16,13 @@ class GameplaySyncManager {
   GameplaySyncManager(std::shared_ptr<server::PlayerRegistry> registry,
                       std::shared_ptr<server::SessionManager> session_manager);
 
-  // Client-side initialization
-  explicit GameplaySyncManager(game_state::GameState* state);
+  // Client-side initialization.
+  // `remote_player_manager` must be the single canonical instance owned by
+  // WorldManager (see WorldManager::Initialize) so that packet handling and
+  // rendering always observe the same object. GameplaySyncManager does not
+  // own or construct a RemotePlayerManager itself.
+  GameplaySyncManager(game_state::GameState* state,
+                      std::shared_ptr<RemotePlayerManager> remote_player_manager);
 
   // Register server handlers on the dispatcher
   void RegisterServerHandlers(network::PacketDispatcher& dispatcher);
@@ -28,7 +33,7 @@ class GameplaySyncManager {
   // Returns the Server's world sync component
   WorldSync* GetWorldSync() { return world_sync_.get(); }
   
-  // Returns the Client's remote player manager
+  // Returns the Client's remote player manager (the shared, canonical instance)
   RemotePlayerManager* GetRemotePlayerManager() { return remote_player_manager_.get(); }
   
   // Returns the Client's sync scheduler
@@ -42,7 +47,7 @@ class GameplaySyncManager {
   
   // Client dependencies
   game_state::GameState* state_;
-  std::unique_ptr<RemotePlayerManager> remote_player_manager_;
+  std::shared_ptr<RemotePlayerManager> remote_player_manager_;  // not owned; injected
   std::unique_ptr<SyncScheduler> sync_scheduler_;
 };
 

@@ -34,39 +34,18 @@ GameContext::~GameContext() {
 void GameContext::Initialize(const memory::AddressTable& addresses) {
     world_manager_ = std::make_unique<gameplay::WorldManager>();
     world_manager_->Initialize(this);
-
+    
     inventory_manager_ = std::make_unique<gameplay::InventoryManager>();
     inventory_manager_->Initialize(this, addresses);
-
+    
     chat_manager_ = std::make_unique<gameplay::ChatManager>();
     friend_manager_ = std::make_unique<gameplay::FriendManager>();
     trade_manager_ = std::make_unique<gameplay::TradeManager>();
     battle_manager_ = std::make_unique<gameplay::BattleManager>();
 
     auto& memory_api = emulator::GameBootstrap::GetInstance().GetEmulator();
-    parser_registry_ = std::make_unique<parser::ParserRegistry>(
-        memory::MemoryApi(memory_api), addresses);
-
+    parser_registry_ = std::make_unique<parser::ParserRegistry>(memory::MemoryApi(memory_api), addresses);
     game_state_ = std::make_unique<game_state::GameState>();
-
-    // <-- ADD THE NEW CODE HERE
-    if (network_client_ && game_state_ && !sync_scheduler_) {
-        sync_scheduler_ = std::make_unique<gameplay::SyncScheduler>(
-            game_state_.get(),
-            [this](const network::Packet& p) {
-                if (!network_client_)
-                    return;
-
-                network::Packet to_send = p;
-
-                if (auto session =
-                        network::ClientSessionManager::GetInstance().GetSession()) {
-                    to_send.session_token = session->session_token;
-                }
-
-                network_client_->SendPacket(to_send);
-            });
-    }
 }
 
 void GameContext::Update(float dt) {

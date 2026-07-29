@@ -1,9 +1,8 @@
 #pragma once
-
-#include <cstdint>
-#include <vector>
-
 #include <SDL2/SDL.h>
+#include <vector>
+#include <cstdint>
+#include <algorithm>
 
 namespace unboundmp::render {
 
@@ -27,25 +26,19 @@ struct RenderSortKey {
     float sort_y = 0.0f;
     int32_t sub_priority = 0;
 
-    // Optimized sorting predicate: constexpr and noexcept to allow strict compiler inlining
-    // during the critical std::ranges::sort pass.
-    [[nodiscard]] constexpr bool operator<(const RenderSortKey& other) const noexcept {
-        if (layer != other.layer) {
-            return layer < other.layer;
-        }
-        if (sort_y != other.sort_y) {
-            return sort_y < other.sort_y;
-        }
+    bool operator<(const RenderSortKey& other) const {
+        if (layer != other.layer) return static_cast<int>(layer) < static_cast<int>(other.layer);
+        if (sort_y != other.sort_y) return sort_y < other.sort_y;
         return sub_priority < other.sub_priority;
     }
 };
 
 struct DrawCommand {
-    RenderSortKey sort_key{};
+    RenderSortKey sort_key;
     
     SDL_Texture* texture = nullptr;
-    SDL_Rect src_rect{0, 0, 0, 0};
-    SDL_Rect dst_rect{0, 0, 0, 0};
+    SDL_Rect src_rect = {0, 0, 0, 0};
+    SDL_Rect dst_rect = {0, 0, 0, 0};
     
     // Geometry rendering
     const SDL_Vertex* vertices = nullptr;
@@ -72,28 +65,20 @@ public:
     RenderQueue() = default;
     ~RenderQueue() = default;
 
-    // Prevent expensive accidental deep copies of the internal command/vertex buffers.
-    RenderQueue(const RenderQueue&) = delete;
-    RenderQueue& operator=(const RenderQueue&) = delete;
-
-    // Allow default move semantics
-    RenderQueue(RenderQueue&&) noexcept = default;
-    RenderQueue& operator=(RenderQueue&&) noexcept = default;
-
     void Enqueue(const DrawCommand& cmd);
     
-    // Sorts commands by RenderSortKey and flushes them to the hardware backend
+    // Sorts commands and issues them to the renderer
     void Flush(SDL_Renderer* renderer);
     
     void Clear();
 
-    [[nodiscard]] size_t GetCommandCount() const noexcept { return last_command_count_; }
-    [[nodiscard]] size_t GetBatchCount() const noexcept { return last_batch_count_; }
-    [[nodiscard]] float GetSortTimeMs() const noexcept { return last_sort_time_ms_; }
+    size_t GetCommandCount() const { return last_command_count_; }
+    size_t GetBatchCount() const { return last_batch_count_; }
+    float GetSortTimeMs() const { return last_sort_time_ms_; }
 
 private:
     std::vector<DrawCommand> commands_;
-    std::vector<SDL_Vertex> temp_vertices_; // Preserved across frames to prevent CPU re-allocations
+    std::vector<SDL_Vertex> temp_vertices_; // For transforming geometry
     
     size_t last_command_count_ = 0;
     size_t last_batch_count_ = 0;

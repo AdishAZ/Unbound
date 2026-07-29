@@ -32,7 +32,7 @@ class PositionReader {
     if (!y_symbol) {
       return ReadResult<Position>::NotConfigured("player_y");
     }
-    
+
     Position pos;
     pos.x = x_symbol->is_signed ? memory_.ReadWidthSigned(x_symbol->address, x_symbol->width)
                                  : static_cast<int32_t>(memory_.ReadWidth(x_symbol->address, x_symbol->width));

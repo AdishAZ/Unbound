@@ -1,0 +1,4 @@
+D:\Unbound\pokemon\cpp\build\RelWithDebInfo\pqxx.dll
+D:\Unbound\pokemon\cpp\build\RelWithDebInfo\libpq.dll
+D:\Unbound\pokemon\cpp\build\RelWithDebInfo\libssl-3-x64.dll
+D:\Unbound\pokemon\cpp\build\RelWithDebInfo\libcrypto-3-x64.dll

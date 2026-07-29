@@ -10,23 +10,6 @@ namespace unboundmp::gameplay {
 
 void RemotePlayerManager::Initialize(network::NetworkClock* clock) {
     auto& dispatcher = network::ClientPacketDispatcher::GetInstance();
-    dispatcher.Subscribe(network::PacketType::kPlayerState,
-    [this, clock](const network::Packet& p) {
-        auto pkt = network::PlayerStatePacket::Deserialize(p.payload);
-
-        std::cerr << "[RPM] kPlayerState account_id="
-                  << pkt.account_id
-                  << " pos=("
-                  << pkt.x
-                  << ","
-                  << pkt.y
-                  << ")"
-                  << std::endl;
-
-        HandleStateUpdate(
-            pkt,
-            clock ? clock->GetServerTimeMs() : 0);
-    });
     
     dispatcher.Subscribe(network::PacketType::kWorldSnapshot, [this, clock](const network::Packet& p) {
         auto pkt = network::WorldSnapshotPacket::Deserialize(p.payload);
@@ -87,17 +70,7 @@ void RemotePlayerManager::HandleStateUpdate(const network::PlayerStatePacket& pk
   std::lock_guard<std::mutex> lock(mutex_);
   auto it = players_.find(pkt.account_id);
   if (it != players_.end()) {
-    it->second.interpolator.SetTarget(
-    it->second.current_x,
-    it->second.current_y,
-    pkt.x,
-    pkt.y
-);
-
-// Keep the player's authoritative position updated
-    it->second.current_x = pkt.x;
-    it->second.current_y = pkt.y;
-
+    it->second.interpolator.SetTarget(it->second.current_x, it->second.current_y, pkt.x, pkt.y);
     it->second.direction = pkt.direction;
     it->second.movement_state = pkt.movement_state;
     it->second.last_update_time = timestamp;
@@ -109,19 +82,7 @@ void RemotePlayerManager::HandlePlayerMove(const network::PlayerMovePacket& pkt,
   auto it = players_.find(pkt.account_id);
   if (it != players_.end()) {
     std::cerr << "[RPM] HandlePlayerMove FOUND id=" << pkt.account_id << " old=(" << it->second.current_x << "," << it->second.current_y << ") new=(" << pkt.x << "," << pkt.y << ")" << std::endl;
-
-
-    it->second.interpolator.SetTarget(
-    it->second.current_x,
-    it->second.current_y,
-    pkt.x,
-    pkt.y
-);
-
-// Keep the player's authoritative position updated
-    it->second.current_x = pkt.x;
-    it->second.current_y = pkt.y;
-
+    it->second.interpolator.SetTarget(it->second.current_x, it->second.current_y, pkt.x, pkt.y);
     it->second.movement_state = pkt.movement_state;
     it->second.last_update_time = timestamp;
   } else {
@@ -172,19 +133,10 @@ void RemotePlayerManager::HandleWorldSnapshot(const network::WorldSnapshotPacket
 }
 
 void RemotePlayerManager::Update(float dt) {
-    std::lock_guard<std::mutex> lock(mutex_);
-
-    for (auto& [id, player] : players_) {
-
-        player.interpolator.Update(
-            dt,
-            player.current_x,
-            player.current_y);
-
-        // Keep current position synchronized with interpolator
-
-      
-    }
+  std::lock_guard<std::mutex> lock(mutex_);
+  for (auto& [id, player] : players_) {
+    player.interpolator.Update(dt, player.current_x, player.current_y);
+  }
 }
 
 std::vector<RemotePlayer> RemotePlayerManager::GetPlayersOnMap(uint32_t map_id) const {

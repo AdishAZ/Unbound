@@ -76,7 +76,7 @@ bool GameBootstrap::Initialize() {
     
     if (!init_res.ok) return false;
 
-    std::string rom_path = "client/Pokemon Unbound.gba";
+    std::string rom_path = "../../cpp/client/Pokemon Unbound.gba";
     auto rom_res = emulator_.LoadRom(rom_path);
     core::LogManager::Get().Log(core::LogCategory::Client, core::LogLevel::Info, 
         "2. ROM loaded | Path: " + rom_path + " | Success: " + std::to_string(rom_res.ok) + " | Msg: " + rom_res.message);
@@ -104,14 +104,6 @@ void GameBootstrap::LoadSaveState() {
     auto start_res = emulator_.Start();
     core::LogManager::Get().Log(core::LogCategory::Client, core::LogLevel::Info, 
         "5. Emulator resumed | Success: " + std::to_string(start_res.ok) + " | Msg: " + start_res.message);
-    core::LogManager::Get().Log(
-    core::LogCategory::Client,
-    core::LogLevel::Info,
-    "FrameCount after Start = " + std::to_string(emulator_.GetFrameCount()));
-    core::LogManager::Get().Log(
-    core::LogCategory::Client,
-    core::LogLevel::Info,
-    "FrameCount before LoadState = " + std::to_string(emulator_.GetFrameCount()));
 
     // Now apply Savestate which will inject the state directly into the running core (thread is automatically interrupted and continued).
     persistence::ClientSaveManager::GetInstance().LoadSavestate(emulator_);

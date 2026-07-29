@@ -34,7 +34,7 @@ bool UIEngine::Initialize(SDL_Renderer* renderer, int width, int height) {
     theme_manager_->SetDefaultTheme();
     LocalizationManager::GetInstance().SetLanguage("en_US"); // Try to load english
 
-    if (!font_manager_->Initialize("../assets/fonts/default.ttf")) {
+    if (!font_manager_->Initialize("../../assets/fonts/default.ttf")) {
         return false;
     }
     

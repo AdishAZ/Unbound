@@ -155,7 +155,8 @@ int main() {
   ClientStateManager state1;
   PacketDispatcher dispatcher1;
   std::shared_ptr<MockCore> core1 = std::make_shared<MockCore>();
-  GameplaySyncManager client_gameplay1(core1);
+  auto remote_player_manager1 = std::make_shared<RemotePlayerManager>();
+  GameplaySyncManager client_gameplay1(core1, remote_player_manager1);
   client_gameplay1.RegisterClientHandlers(dispatcher1);
 
   dispatcher1.RegisterHandler(PacketType::kAuthResponse, [&](Connection::Pointer conn, const Packet& p) {
@@ -176,7 +177,8 @@ int main() {
   ClientStateManager state2;
   PacketDispatcher dispatcher2;
   std::shared_ptr<MockCore> core2 = std::make_shared<MockCore>();
-  GameplaySyncManager client_gameplay2(core2);
+  auto remote_player_manager2 = std::make_shared<RemotePlayerManager>();
+  GameplaySyncManager client_gameplay2(core2, remote_player_manager2);
   client_gameplay2.RegisterClientHandlers(dispatcher2);
 
   dispatcher2.RegisterHandler(PacketType::kAuthResponse, [&](Connection::Pointer conn, const Packet& p) {

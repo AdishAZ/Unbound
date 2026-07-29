@@ -1,28 +1,15 @@
 #include "gameplay/sync_scheduler.h"
 #include <iostream>
-#include "core/log_manager.h"
+
 namespace unboundmp::gameplay {
 
 SyncScheduler::SyncScheduler(game_state::GameState* state, StateChangeCallback callback)
     : state_(state), callback_(std::move(callback)) {}
 
 void SyncScheduler::Tick() {
-  std::cerr << "SyncScheduler::Tick()" << std::endl;
   if (!state_ || !state_->IsValid()) return;
 
   const auto& local_player = state_->GetLocalPlayer();
-  // Debug: print the values coming from GameState every second
-static int debug_counter = 0;
-if (++debug_counter % 60 == 0) {
-    core::LogManager::Get().Log(
-        core::LogCategory::Client,
-        core::LogLevel::Info,
-        "[GAMESTATE] bank=" + std::to_string(local_player.map.bank) +
-        " map=" + std::to_string(local_player.map.number) +
-        " x=" + std::to_string(local_player.position.x) +
-        " y=" + std::to_string(local_player.position.y) +
-        " facing=" + std::to_string(static_cast<int>(local_player.facing)));
-}
 
   uint32_t current_map = (local_player.map.bank << 16) | local_player.map.number;
   float current_x = static_cast<float>(local_player.position.x);
@@ -55,15 +42,15 @@ if (++debug_counter % 60 == 0) {
   }
 
   if (pos_changed || map_changed) {
-    network::PlayerStatePacket state;
-    state.x = current_x;
-    state.y = current_y;
-    state.direction = current_dir;
-    state.movement_state = current_state;
+    network::MoveRequestPacket req;
+    req.x = current_x;
+    req.y = current_y;
+    req.direction = current_dir;
+    req.movement_state = current_state;
 
     network::Packet p;
-    p.type = network::PacketType::kPlayerState;
-    p.payload = state.Serialize();
+    p.type = network::PacketType::kMoveRequest;
+    p.payload = req.Serialize();
     callback_(p);
 
     last_x_ = current_x;

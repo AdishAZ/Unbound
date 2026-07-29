@@ -1,56 +1,32 @@
 #include "render/render_manager.h"
 
-#include <algorithm>
-#include <ranges>
-#include <SDL2/SDL.h>
-
-#include "render/aspect_ratio.h"
-#include "render/lighting_manager.h"
 #include "render/particle_system.h"
-#include "render/resolution.h"
 #include "render/weather_renderer.h"
+#include "render/lighting_manager.h"
 
 namespace unboundmp::render {
 
-RenderManager::RenderManager() = default;
+RenderManager::RenderManager() {}
 
 RenderManager::~RenderManager() {
     Shutdown();
 }
 
 void RenderManager::Initialize() {
-    for (const auto& renderer : renderers_) {
-        if (renderer) {
-            renderer->Initialize();
-        }
+    for (auto& renderer : renderers_) {
+        renderer->Initialize();
     }
 }
 
 void RenderManager::Shutdown() {
-    for (const auto& renderer : renderers_) {
-        if (renderer) {
-            renderer->Shutdown();
-        }
+    for (auto& renderer : renderers_) {
+        renderer->Shutdown();
     }
-
-    render_queue_.Clear();
     renderers_.clear();
-
-    // Release specialized subsystem references to ensure clean RAII teardown[cite: 37]
-    particle_system_.reset();
-    weather_renderer_.reset();
-    lighting_manager_.reset();
 }
 
 void RenderManager::AddRenderer(std::shared_ptr<IRenderer> renderer) {
-    if (!renderer) {
-        return;
-    }
-
-    // Prevent duplicate entries in the render pipeline when specialized setters are invoked[cite: 37]
-    if (std::ranges::find(renderers_, renderer) == renderers_.end()) {
-        renderers_.push_back(std::move(renderer));
-    }
+    renderers_.push_back(renderer);
 }
 
 void RenderManager::SetParticleSystem(std::shared_ptr<ParticleSystem> ps) {
@@ -69,45 +45,30 @@ void RenderManager::SetLightingManager(std::shared_ptr<LightingManager> lm) {
 }
 
 void RenderManager::Render(void* native_renderer, int width, int height, float dt) {
-    // Stage 0: Input & backend validation[cite: 29, 37]
-    if (!native_renderer || width <= 0 || height <= 0) {
-        return;
-    }
-
-    const Uint64 start_time = SDL_GetPerformanceCounter();
-
-    // Stage 1: Camera & Viewport Synchronization[cite: 26, 27, 30]
+    Uint64 start_time = SDL_GetPerformanceCounter();
+    
     camera_controller_.Update(dt);
-    camera_.Recompute(AspectRatio(Resolution{width, height}));
+    
+    Resolution res{width, height};
+    camera_.Recompute(AspectRatio(res));
+    
+    RenderContext context;
+    context.camera = &camera_;
+    context.queue = &render_queue_;
+    context.viewport_width = width;
+    context.viewport_height = height;
+    context.delta_time = dt;
+    context.native_renderer = native_renderer;
 
-    // Stage 2: Unified Render Context Configuration[cite: 29]
-    const RenderContext context{
-        &render_queue_,
-        &camera_,
-        width,
-        height,
-        dt,
-        native_renderer
-    };
-
-    // Stage 3: Prune dead references and execute Command Generation Pass[cite: 29, 37]
-    std::erase_if(renderers_, [](const std::shared_ptr<IRenderer>& r) {
-        return !r;
-    });
-
-    for (const auto& renderer : renderers_) {
+    for (auto& renderer : renderers_) {
         renderer->Render(context);
     }
-
-    // Stage 4: Hardware Flush Pass[cite: 38]
+    
+    // Actually draw all queued items
     render_queue_.Flush(static_cast<SDL_Renderer*>(native_renderer));
-
-    // Stage 5: Profiling & Frame Metrics[cite: 37]
-    const Uint64 end_time = SDL_GetPerformanceCounter();
-    const double frequency = static_cast<double>(SDL_GetPerformanceFrequency());
-    last_frame_render_time_ms_ = (frequency > 0.0)
-        ? static_cast<float>((end_time - start_time) * 1000.0 / frequency)
-        : 0.0f;
+    
+    Uint64 end_time = SDL_GetPerformanceCounter();
+    last_frame_render_time_ms_ = static_cast<float>(end_time - start_time) * 1000.0f / static_cast<float>(SDL_GetPerformanceFrequency());
 }
 
 } // namespace unboundmp::render

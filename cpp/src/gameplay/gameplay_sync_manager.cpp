@@ -8,9 +8,10 @@ GameplaySyncManager::GameplaySyncManager(std::shared_ptr<server::PlayerRegistry>
       session_manager_(session_manager),
       world_sync_(std::make_unique<WorldSync>(registry)) {}
 
-GameplaySyncManager::GameplaySyncManager(game_state::GameState* state)
+GameplaySyncManager::GameplaySyncManager(game_state::GameState* state,
+                                         std::shared_ptr<RemotePlayerManager> remote_player_manager)
     : state_(state),
-      remote_player_manager_(std::make_unique<RemotePlayerManager>()) {
+      remote_player_manager_(std::move(remote_player_manager)) {
   // SyncScheduler requires a callback to send packets, but we don't have the connection here.
   // We leave sync_scheduler_ null and let the client initialize it when ready.
 }

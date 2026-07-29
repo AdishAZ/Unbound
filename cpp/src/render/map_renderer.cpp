@@ -1,12 +1,6 @@
 #include "render/map_renderer.h"
-
-#include <algorithm>
-#include <SDL2/SDL.h>
-
-#include "core/log_manager.h"
 #include "render/render_queue.h"
-#include "render/resolution.h"
-#include "render/viewport.h"
+#include "core/log_manager.h"
 
 namespace unboundmp::render {
 
@@ -17,16 +11,10 @@ MapRenderer::~MapRenderer() {
 }
 
 void MapRenderer::Initialize() {
-    // Texture is lazily initialized in Render() once we have a valid native context.
+    // Texture creation will happen on first render or when context is available.
 }
 
 void MapRenderer::Shutdown() {
-    // Rely on RAII unique_ptr to safely destroy the SDL_Texture
-    texture_.reset();
-    
-    current_pixels_ = nullptr;
-    current_pitch_ = 0;
-    is_dirty_ = false;
 }
 
 void MapRenderer::SetFramebuffer(const void* pixels, int pitch) {
@@ -36,52 +24,60 @@ void MapRenderer::SetFramebuffer(const void* pixels, int pitch) {
 }
 
 void MapRenderer::Render(const RenderContext& context) {
-    if (!context.native_renderer || !context.queue) {
+    if (!context.native_renderer) {
+        LOG_ERROR(Client, "MapRenderer: Missing native_renderer");
         return;
     }
-
     if (!current_pixels_) {
+        LOG_INFO(Client, "MapRenderer: No current_pixels_ to render");
         return;
     }
-
-    auto* renderer = static_cast<SDL_Renderer*>(context.native_renderer);
-
-    // Lazy initialization of the streaming texture via RAII
-    if (!texture_) {
-        texture_.reset(SDL_CreateTexture(
+    
+    SDL_Renderer* renderer = static_cast<SDL_Renderer*>(context.native_renderer);
+    
+    // Create texture if it doesn't exist
+    // Assuming 240x160 native resolution
+    static SDL_Texture* texture = nullptr;
+    if (!texture) {
+        texture = SDL_CreateTexture(
             renderer,
             SDL_PIXELFORMAT_ABGR8888,
             SDL_TEXTUREACCESS_STREAMING,
-            kGbaNativeResolution.width,
-            kGbaNativeResolution.height
-        ));
-
-        if (!texture_) {
-            LOG_ERROR(Client, "MapRenderer: Failed to create hardware texture.");
-            return;
-        }
-        LOG_INFO(Client, "MapRenderer: Hardware texture created successfully.");
+            240, 160
+        );
+        LOG_INFO(Client, "MapRenderer: Created Texture (ptr: {})", (void*)texture);
     }
-
-    // Sync CPU framebuffer to GPU if dirty
+    
     if (is_dirty_) {
-        SDL_UpdateTexture(texture_.get(), nullptr, current_pixels_, current_pitch_);
+        LOG_INFO(Client, "MapRenderer: Updating Texture");
+        SDL_UpdateTexture(texture, nullptr, current_pixels_, current_pitch_);
         is_dirty_ = false;
     }
-
-    // Deduplicate viewport math using the centralized DynamicViewport logic
-    DynamicViewport viewport;
-    viewport.Resize(Resolution{context.viewport_width, context.viewport_height}, kGbaNativeResolution);
-    const ViewportRect& vrect = viewport.Rect();
-
-    // Submit batch command to the render pipeline
-    DrawCommand cmd;
-    cmd.sort_key.layer = RenderLayerZ::kBackground;
-    cmd.texture = texture_.get();
-    cmd.src_rect = {0, 0, kGbaNativeResolution.width, kGbaNativeResolution.height};
-    cmd.dst_rect = {vrect.x, vrect.y, vrect.width, vrect.height};
-
-    context.queue->Enqueue(cmd);
+    
+    // Draw centered in the viewport
+    SDL_Rect dst_rect;
+    dst_rect.w = 240;
+    dst_rect.h = 160;
+    
+    // Scale up as much as possible while maintaining 3:2 aspect ratio
+    float scale_x = static_cast<float>(context.viewport_width) / 240.0f;
+    float scale_y = static_cast<float>(context.viewport_height) / 160.0f;
+    float scale = std::min(scale_x, scale_y);
+    
+    dst_rect.w = static_cast<int>(240.0f * scale);
+    dst_rect.h = static_cast<int>(160.0f * scale);
+    dst_rect.x = (context.viewport_width - dst_rect.w) / 2;
+    dst_rect.y = (context.viewport_height - dst_rect.h) / 2;
+    
+    // Enqueue the draw command instead of directly rendering
+    if (context.queue) {
+        DrawCommand cmd;
+        cmd.sort_key.layer = RenderLayerZ::kBackground;
+        cmd.texture = texture;
+        cmd.src_rect = {0, 0, 240, 160};
+        cmd.dst_rect = dst_rect;
+        context.queue->Enqueue(cmd);
+    }
 }
 
 } // namespace unboundmp::render

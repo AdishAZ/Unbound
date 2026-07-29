@@ -1,0 +1,10 @@
+D:\Unbound\pokemon\cpp\src\render\aspect_ratio.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\aspect_ratio.obj
+D:\Unbound\pokemon\cpp\src\render\resolution_scaling.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\resolution_scaling.obj
+D:\Unbound\pokemon\cpp\src\render\viewport.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\viewport.obj
+D:\Unbound\pokemon\cpp\src\render\camera.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\camera.obj
+D:\Unbound\pokemon\cpp\src\render\overlay_layout.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\overlay_layout.obj
+D:\Unbound\pokemon\cpp\src\render\render_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\render_manager.obj
+D:\Unbound\pokemon\cpp\src\render\world_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\world_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\map_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\map_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\entity_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\entity_renderer.obj
+D:\Unbound\pokemon\cpp\src\render\sdl_renderer.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_render.dir\RelWithDebInfo\sdl_renderer.obj
