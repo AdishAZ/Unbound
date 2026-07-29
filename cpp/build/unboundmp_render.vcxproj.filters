@@ -13,6 +13,9 @@
     <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\camera_controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\overlay_layout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -25,10 +28,10 @@
     <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\map_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\entity_renderer.cpp">
+    <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\sdl_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\sdl_renderer.cpp">
+    <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\remote_player_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Unbound\pokemon\cpp\src\render\render_queue.cpp">

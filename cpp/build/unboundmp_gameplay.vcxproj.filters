@@ -7,6 +7,9 @@
     <ClCompile Include="D:\Unbound\pokemon\cpp\src\gameplay\follower_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Unbound\pokemon\cpp\src\gameplay\entity_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="D:\Unbound\pokemon\cpp\src\gameplay\visibility_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

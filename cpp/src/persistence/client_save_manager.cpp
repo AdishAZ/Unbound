@@ -142,26 +142,62 @@ void ClientSaveManager::SaveMetadata(const CharacterSaveMetadata& meta) const {
 }
 
 void ClientSaveManager::LoadGameSave(emulator::MgbaEmulatorCore& emulator) {
-    if (active_account_id_ == 0 || active_character_id_ == 0) return;
-    
+
+    core::LogManager::Get().Log(
+        core::LogCategory::Client,
+        core::LogLevel::Info,
+        "LoadGameSave: Account=" + std::to_string(active_account_id_) +
+        " Character=" + std::to_string(active_character_id_));
+
+    if (active_account_id_ == 0 || active_character_id_ == 0) {
+        core::LogManager::Get().Log(
+            core::LogCategory::Client,
+            core::LogLevel::Error,
+            "LoadGameSave: Aborted - active account or character not set.");
+        return;
+    }
+
     std::string game_save = GetGameSavePath();
     std::error_code ec;
-    
-    // Always load game.sav if it exists (mGBA handles loading it)
+
+    core::LogManager::Get().Log(
+        core::LogCategory::Client,
+        core::LogLevel::Info,
+        "LoadGameSave: Save path = " + game_save);
+
     if (fs::exists(game_save, ec)) {
+        core::LogManager::Get().Log(
+            core::LogCategory::Client,
+            core::LogLevel::Info,
+            "LoadGameSave: Save file exists.");
+
         auto res = emulator.LoadSave(game_save);
-        core::LogManager::Get().Log(core::LogCategory::Client, core::LogLevel::Info, 
-            "3. game.sav loaded | Path: " + game_save + " | Success: " + std::to_string(res.ok) + " | Msg: " + res.message);
+
+        core::LogManager::Get().Log(
+            core::LogCategory::Client,
+            core::LogLevel::Info,
+            "3. game.sav loaded | Path: " + game_save +
+            " | Success: " + std::to_string(res.ok) +
+            " | Msg: " + res.message);
     } else {
-        // Just touch the file so mGBA uses this path
+        core::LogManager::Get().Log(
+            core::LogCategory::Client,
+            core::LogLevel::Warning,
+            "LoadGameSave: Save file does NOT exist. Creating empty save.");
+
         std::ofstream touch(game_save, std::ios::binary);
         touch.close();
+
         auto res = emulator.LoadSave(game_save);
-        core::LogManager::Get().Log(core::LogCategory::Client, core::LogLevel::Info, 
-            "3. game.sav loaded (created empty) | Path: " + game_save + " | Success: " + std::to_string(res.ok) + " | Msg: " + res.message);
+
+        core::LogManager::Get().Log(
+            core::LogCategory::Client,
+            core::LogLevel::Info,
+            "3. game.sav loaded (created empty) | Path: " + game_save +
+            " | Success: " + std::to_string(res.ok) +
+            " | Msg: " + res.message);
     }
 }
-
 void ClientSaveManager::LoadSavestate(emulator::MgbaEmulatorCore& emulator) {
     if (active_account_id_ == 0 || active_character_id_ == 0) return;
 
@@ -170,7 +206,7 @@ void ClientSaveManager::LoadSavestate(emulator::MgbaEmulatorCore& emulator) {
 
     // Now apply savestate if it exists
     if (fs::exists(auto_save, ec)) {
-        std::string rom_path = "cpp/client/Pokemon Unbound.gba"; // Could be passed in, assuming standard
+        std::string rom_path = "client/Pokemon Unbound.gba"; // Could be passed in, assuming standard
         fs::path target_ss1 = fs::path(rom_path).replace_extension(".ss1");
         
         fs::copy_file(auto_save, target_ss1, fs::copy_options::overwrite_existing, ec);
@@ -232,7 +268,7 @@ bool ClientSaveManager::ExecuteSave(const SaveRequest& request) {
     
     std::error_code ec;
     if (ss1_success) {
-        std::string rom_path = "cpp/client/Pokemon Unbound.gba";
+        std::string rom_path = "client/Pokemon Unbound.gba";
         fs::path source_ss1 = fs::path(rom_path).replace_extension(".ss1");
         
         if (fs::exists(source_ss1, ec)) {

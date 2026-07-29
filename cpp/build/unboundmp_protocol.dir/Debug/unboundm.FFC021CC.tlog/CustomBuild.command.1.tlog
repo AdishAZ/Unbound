@@ -1,6 +1,6 @@
 ^D:\UNBOUND\POKEMON\CPP\BUILD\CMAKEFILES\FFB1DC3069EC8E2DA1F738DDE4FB0EB7\PACKETS.PB.H.RULE
 setlocal
-D:\Unbound\pokemon\vcpkg\installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :D:/Unbound/pokemon/cpp/build -I D:/Unbound/pokemon/proto -I D:/Unbound/pokemon/cpp D:/Unbound/pokemon/proto/packets.proto
+D:\Unbound\vcpkg\installed\x64-windows\tools\protobuf\protoc.exe --cpp_out :D:/Unbound/pokemon/cpp/build -I D:/Unbound/pokemon/proto D:/Unbound/pokemon/proto/packets.proto
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

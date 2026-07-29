@@ -1,6 +1,6 @@
 #include "parser/position_parser.h"
 #include "parser/coordinate_normalizer.h"
-
+#include <cstdio>
 namespace unboundmp::parser {
 
 PositionParser::PositionParser(const memory::MemoryApi& memory, const memory::AddressTable& addresses)
@@ -13,6 +13,15 @@ ParseResult<PlayerPosition> PositionParser::Parse(int64_t frame_count) {
 
     memory::PositionReader reader(memory_, addresses_);
     auto result = reader.Read();
+
+    if (result.ok()) {
+        printf("[POSITION] x=%d y=%d\n",
+               result.value->x,
+               result.value->y);
+    } else {
+        printf("[POSITION] READ FAILED\n");
+    }
+
     if (result.ok()) {
         PlayerPosition pos{result.value->x, result.value->y};
         CoordinateNormalizer::Normalize(pos.x, pos.y);
@@ -20,9 +29,8 @@ ParseResult<PlayerPosition> PositionParser::Parse(int64_t frame_count) {
     } else {
         cached_result_ = ParseResult<PlayerPosition>::Failure(result.error);
     }
-    
+
     last_frame_ = frame_count;
     return cached_result_;
 }
-
-} // namespace unboundmp::parser
+}

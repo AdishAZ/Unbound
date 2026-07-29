@@ -369,6 +369,10 @@ int main()
             
             // Read memory values for Profiler
             unboundmp::memory::MemoryApi mem_api(bootstrap.GetEmulator());
+            std::cout
+                << "X=" << mem_api.ReadU16(0x02036E48)
+                << " Y=" << mem_api.ReadU16(0x02036E4A)
+                << std::endl;
             unboundmp::memory::PositionReader pos_reader(mem_api, address_table);
             unboundmp::memory::MapReader map_reader(mem_api, address_table);
             

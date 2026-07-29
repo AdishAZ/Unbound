@@ -1,5 +1,6 @@
 D:\Unbound\pokemon\cpp\src\gameplay\direction.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\direction.obj
 D:\Unbound\pokemon\cpp\src\gameplay\follower_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\follower_manager.obj
+D:\Unbound\pokemon\cpp\src\gameplay\entity_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\entity_manager.obj
 D:\Unbound\pokemon\cpp\src\gameplay\visibility_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\visibility_manager.obj
 D:\Unbound\pokemon\cpp\src\gameplay\world_sync.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\world_sync.obj
 D:\Unbound\pokemon\cpp\src\gameplay\movement_sync.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_gameplay.dir\Debug\movement_sync.obj

@@ -1,7 +1,0 @@
-D:\Unbound\pokemon\cpp\src\core\json.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\json.obj
-D:\Unbound\pokemon\cpp\src\core\log_manager.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\log_manager.obj
-D:\Unbound\pokemon\cpp\src\core\client_config.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\client_config.obj
-D:\Unbound\pokemon\cpp\src\core\task_scheduler.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\task_scheduler.obj
-D:\Unbound\pokemon\cpp\src\core\crash_reporter.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\crash_reporter.obj
-D:\Unbound\pokemon\cpp\src\core\event_system.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\event_system.obj
-D:\Unbound\pokemon\cpp\src\core\game_context.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_core.dir\Release\game_context.obj

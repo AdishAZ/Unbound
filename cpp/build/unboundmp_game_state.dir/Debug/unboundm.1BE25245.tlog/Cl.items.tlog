@@ -1,0 +1,12 @@
+D:\Unbound\pokemon\cpp\src\parser\domain_types.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\domain_types.obj
+D:\Unbound\pokemon\cpp\src\parser\position_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\position_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\map_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\map_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\direction_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\direction_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\movement_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\movement_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\local_player_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\local_player_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\party_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\party_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\follower_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\follower_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\inventory_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\inventory_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\event_object_parser.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\event_object_parser.obj
+D:\Unbound\pokemon\cpp\src\parser\parser_registry.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\parser_registry.obj
+D:\Unbound\pokemon\cpp\src\game_state\game_state.cpp;D:\Unbound\pokemon\cpp\build\unboundmp_game_state.dir\Debug\game_state.obj

@@ -13,6 +13,7 @@ void GameState::Update(parser::ParserRegistry& parsers, int64_t frame_count) {
     
     if (auto* local_parser = parsers.GetLocalPlayerParser()) {
         auto result = local_parser->Parse(frame_count);
+        
         if (result.ok() && result.value.has_value()) {
             const auto& snapshot = *result.value;
             if (!(local_player_.position == snapshot.position)) {

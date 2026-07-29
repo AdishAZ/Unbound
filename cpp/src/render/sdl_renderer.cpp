@@ -1,98 +1,132 @@
 #include "render/sdl_renderer.h"
 
-SDLRenderer::SDLRenderer()
-    : window_(nullptr),
-      renderer_(nullptr),
-      texture_(nullptr)
-{
-}
+#include <algorithm>
+#include <SDL2/SDL.h>
 
-SDLRenderer::~SDLRenderer()
-{
+#include "core/log_manager.h"
+#include "render/resolution.h"
+
+namespace unboundmp::render {
+
+SDLRenderer::SDLRenderer() = default;
+
+SDLRenderer::~SDLRenderer() {
     Shutdown();
 }
 
-bool SDLRenderer::Initialize(int width, int height, int scale)
-{
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+bool SDLRenderer::Initialize(int width, int height, int scale) {
+    if (width <= 0 || height <= 0 || scale <= 0) {
+        LOG_ERROR(Client, "SDLRenderer: Invalid initialization dimensions ({}x{}, scale: {})", width, height, scale);
         return false;
+    }
 
-    window_ = SDL_CreateWindow(
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
+        LOG_ERROR(Client, "SDLRenderer: Failed to initialize SDL video subsystem: {}", SDL_GetError());
+        return false;
+    }
+
+    window_.reset(SDL_CreateWindow(
         "Pokemon Unbound",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         width * scale,
         height * scale,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+    ));
 
-    if (!window_)
+    if (!window_) {
+        LOG_ERROR(Client, "SDLRenderer: Failed to create window: {}", SDL_GetError());
+        Shutdown();
         return false;
+    }
 
-    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer_.reset(SDL_CreateRenderer(
+        window_.get(),
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    ));
 
-    if (!renderer_)
+    if (!renderer_) {
+        LOG_ERROR(Client, "SDLRenderer: Failed to create hardware renderer: {}", SDL_GetError());
+        Shutdown();
         return false;
-        
-    SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND);
-    // Removed SDL_RenderSetLogicalSize to render at exact physical pixel size!
+    }
 
-    texture_ = SDL_CreateTexture(
-        renderer_,
+    SDL_SetRenderDrawBlendMode(renderer_.get(), SDL_BLENDMODE_BLEND);
+
+    texture_.reset(SDL_CreateTexture(
+        renderer_.get(),
         SDL_PIXELFORMAT_ABGR8888,
         SDL_TEXTUREACCESS_STREAMING,
         width,
-        height);
+        height
+    ));
 
-    return texture_ != nullptr;
-}
-
-void SDLRenderer::Shutdown()
-{
-    if (texture_) SDL_DestroyTexture(texture_);
-    if (renderer_) SDL_DestroyRenderer(renderer_);
-    if (window_) SDL_DestroyWindow(window_);
-
-    texture_ = nullptr;
-    renderer_ = nullptr;
-    window_ = nullptr;
-
-    SDL_Quit();
-}
-
-void SDLRenderer::ToggleFullscreen()
-{
-    if (!window_) return;
-    
-    is_fullscreen_ = !is_fullscreen_;
-    if (is_fullscreen_) {
-        SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    } else {
-        SDL_SetWindowFullscreen(window_, 0);
-    }
-}
-
-bool SDLRenderer::ProcessEvents()
-{
-    SDL_Event e;
-
-    while (SDL_PollEvent(&e))
-    {
-        if (e.type == SDL_QUIT)
-            return false;
+    if (!texture_) {
+        LOG_ERROR(Client, "SDLRenderer: Failed to create streaming framebuffer texture: {}", SDL_GetError());
+        Shutdown();
+        return false;
     }
 
+    is_fullscreen_ = false;
+    LOG_INFO(Client, "SDLRenderer: Initialized successfully ({}x{} @ {}x scale)", width, height, scale);
     return true;
 }
 
-void SDLRenderer::Render(const void* pixels, int pitch)
-{
-    SDL_UpdateTexture(texture_, nullptr, pixels, pitch);
+void SDLRenderer::Shutdown() {
+    texture_.reset();
+    renderer_.reset();
+    window_.reset();
 
-    SDL_RenderClear(renderer_);
-    SDL_RenderCopy(renderer_, texture_, nullptr, nullptr);
+    if (SDL_WasInit(SDL_INIT_VIDEO) != 0) {
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+    }
+
+    is_fullscreen_ = false;
 }
 
-void SDLRenderer::Present()
-{
-    SDL_RenderPresent(renderer_);
+void SDLRenderer::ToggleFullscreen() {
+    if (!window_) {
+        return;
+    }
+
+    is_fullscreen_ = !is_fullscreen_;
+    const Uint32 fullscreen_flag = is_fullscreen_ ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+
+    if (SDL_SetWindowFullscreen(window_.get(), fullscreen_flag) != 0) {
+        LOG_ERROR(Client, "SDLRenderer: Failed to toggle fullscreen mode: {}", SDL_GetError());
+        is_fullscreen_ = !is_fullscreen_; // Revert state on failure
+    }
 }
+
+bool SDLRenderer::ProcessEvents() {
+    SDL_Event event;
+    while (SDL_PollEvent(&event) != 0) {
+        if (event.type == SDL_QUIT) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void SDLRenderer::Render(const void* pixels, int pitch) {
+    if (!renderer_ || !texture_ || !pixels || pitch <= 0) {
+        return;
+    }
+
+    if (SDL_UpdateTexture(texture_.get(), nullptr, pixels, pitch) != 0) {
+        LOG_ERROR(Client, "SDLRenderer: Failed to update streaming texture: {}", SDL_GetError());
+        return;
+    }
+
+    SDL_RenderClear(renderer_.get());
+    SDL_RenderCopy(renderer_.get(), texture_.get(), nullptr, nullptr);
+}
+
+void SDLRenderer::Present() {
+    if (renderer_) {
+        SDL_RenderPresent(renderer_.get());
+    }
+}
+
+} // namespace unboundmp::render

@@ -1,5 +1,0 @@
-D:\Unbound\pokemon\cpp\build\Release\pqxx.dll
-D:\Unbound\pokemon\cpp\build\Release\libpq.dll
-D:\Unbound\pokemon\cpp\build\Release\libssl-3-x64.dll
-D:\Unbound\pokemon\cpp\build\Release\libcrypto-3-x64.dll
-D:\Unbound\pokemon\cpp\build\Release\argon2.dll
